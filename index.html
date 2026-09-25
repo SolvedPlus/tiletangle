@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tile Tangle — Interface Showcase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" sizes="32x32" href="images/piece-icon.png">
+<style>
+  :root{
+    --bg-deep:#0F0A33;
+    --bg-mid:#231A66;
+    --panel:#1B1450;
+    --panel-edge:#332997;
+    --red:#FF5A6E;
+    --blue:#4C8DFF;
+    --yellow:#FFC93C;
+    --green:#43E97B;
+    --ink:#F4F1FF;
+    --ink-muted:#AFA6DE;
+    --font-display:'Baloo 2', ui-rounded, 'Segoe UI', sans-serif;
+    --font-body:'Manrope', system-ui, sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    position:relative;
+    margin:0;
+    background:
+      radial-gradient(120% 70% at 50% -10%, var(--bg-mid) 0%, var(--bg-deep) 55%),
+      var(--bg-deep);
+    color:var(--ink);
+    font-family:var(--font-body);
+    overflow-x:hidden;
+    min-height: 100vh;
+  }
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background-image:url('images/bg-texture.jpg');
+    background-size:cover;
+    background-position:center;
+    background-repeat: no-repeat;
+    opacity:0.65;
+    mix-blend-mode:soft-light;
+    pointer-events:none;
+    z-index:-1;
+  }
+  body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+
+    pointer-events:none;
+    z-index:-2;
+  }
+  section, footer{ position:relative; z-index:1; }
+  img{max-width:100%;display:block;}
+
+  a{color:inherit;}
+
+  /* ---------- layout helpers ---------- */
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px;}
+  section{position:relative;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:100svh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:120px 24px 80px;
+    overflow:hidden;
+  }
+
+  .piece{
+    position:absolute;
+    opacity:.85;
+    filter:drop-shadow(0 10px 20px rgba(0,0,0,.35));
+    animation:drift 14s ease-in-out infinite;
+    pointer-events:none;
+  }
+  .piece img{width:100%;height:100%;display:block;}
+  .p1{width:70px; top:12%; left:10%; animation-delay:0s;}
+  .p2{width:46px; top:22%; right:14%; animation-delay:-3s;}
+  .p3{width:58px; bottom:20%; left:16%; animation-delay:-7s;}
+  .p4{width:38px; bottom:30%; right:10%; animation-delay:-10s;}
+  .p5{width:34px; top:8%; right:32%; animation-delay:-5s;}
+  .p6{width:50px; bottom:10%; right:30%; animation-delay:-12s;}
+
+  /* recolor the base green piece icon per instance */
+  .tint-green{ filter:drop-shadow(0 10px 20px rgba(0,0,0,.35)); }
+  .tint-red{ filter:drop-shadow(0 10px 20px rgba(0,0,0,.35)) hue-rotate(260deg) saturate(1.5) brightness(1.05); }
+  .tint-blue{ filter:drop-shadow(0 10px 20px rgba(0,0,0,.35)) hue-rotate(115deg) saturate(1.3); }
+  .tint-yellow{ filter:drop-shadow(0 10px 20px rgba(0,0,0,.35)) hue-rotate(305deg) saturate(1.6) brightness(1.15); }
+  .tint-purple{ filter:drop-shadow(0 10px 20px rgba(0,0,0,.35)) hue-rotate(190deg) saturate(1.2); }
+
+  @keyframes drift{
+    0%,100%{ transform: translate(0,0) rotate(0deg); }
+    50%{ transform: translate(0,-22px) rotate(12deg); }
+  }
+
+  .eyebrow-logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+    font-family:var(--font-display);
+    font-weight:700;
+    letter-spacing:.02em;
+    color:var(--ink-muted);
+    font-size:15px;
+  }
+  .eyebrow-logo .mini-piece{width:20px;height:20px;}
+
+  h1.title{
+    font-family:var(--font-display);
+    font-weight:800;
+    font-size:clamp(48px, 9vw, 96px);
+    line-height:.98;
+    margin:0 0 22px;
+    background:linear-gradient(100deg, #fff 0%, #E4DBFF 35%, var(--yellow) 62%, var(--red) 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+
+  .tagline{
+    max-width:560px;
+    font-size:18px;
+    line-height:1.6;
+    color:var(--ink-muted);
+    margin:0 0 54px;
+  }
+
+  /* phone mockup */
+  .phone{
+    position:relative;
+    width:238px;
+    border-radius:10px;
+    background:#050318;
+    padding:10px;
+    box-shadow:
+      0 40px 80px -20px rgba(0,0,0,.65),
+      0 0 0 1px rgba(255,255,255,.05) inset;
+  }
+  .phone .screen{
+    position:relative;
+    border-radius:8px;
+    overflow:hidden;
+    background:#000;
+  }
+  .phone .screen img{width:100%;height:auto;}
+
+  .hero .phone{
+    animation:float-phone 6s ease-in-out infinite;
+  }
+  @keyframes float-phone{
+    0%,100%{ transform:translateY(0); }
+    50%{ transform:translateY(-14px); }
+  }
+
+  .scroll-hint{
+    margin-top:56px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    color:var(--ink-muted);
+    font-size:13px;
+    letter-spacing:.02em;
+  }
+  .scroll-hint .arrow{
+    width:18px;height:18px;
+    border-right:2px solid var(--ink-muted);
+    border-bottom:2px solid var(--ink-muted);
+    transform:rotate(45deg);
+    animation:bob 1.8s ease-in-out infinite;
+  }
+  @keyframes bob{
+    0%,100%{ transform:translateY(0) rotate(45deg); }
+    50%{ transform:translateY(6px) rotate(45deg); }
+  }
+
+  /* ---------- GALLERY ---------- */
+  .gallery-intro{
+    padding:40px 0 8px;
+  }
+  .gallery-intro h2{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(28px, 4vw, 40px);
+    margin:0 0 12px;
+  }
+  .gallery-intro p{
+    max-width:520px;
+    color:var(--ink-muted);
+    font-size:16px;
+    line-height:1.6;
+    margin:0;
+  }
+
+  .tray{
+    display:flex;
+    gap:26px;
+    overflow-x:auto;
+    scroll-snap-type:x proximity;
+    padding:48px 28px 60px;
+    scrollbar-width:thin;
+    scrollbar-color:var(--panel-edge) transparent;
+  }
+  .tray::-webkit-scrollbar{height:8px;}
+  .tray::-webkit-scrollbar-thumb{background:var(--panel-edge); border-radius:8px;}
+
+  .card{
+    flex:0 0 auto;
+    scroll-snap-align:center;
+    width:216px;
+    opacity:0;
+    transform:translateY(36px) scale(.96);
+    transition:opacity .7s cubic-bezier(.2,.7,.3,1), transform .7s cubic-bezier(.2,.7,.3,1);
+  }
+  .card.in{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+
+  .card .phone{
+    width:100%;
+    --rim: var(--blue);
+    box-shadow:
+      0 30px 60px -18px rgba(0,0,0,.6),
+      0 0 0 1px var(--rim);
+  }
+  .card:nth-child(3n+2) .phone{ --rim: var(--red); }
+  .card:nth-child(3n) .phone{ --rim: var(--yellow); }
+
+  .card .screen::after{
+    content:"";
+    position:absolute; inset:0;
+    background:linear-gradient(115deg, transparent 40%, rgba(255,255,255,.5) 48%, transparent 56%);
+    transform:translateX(-120%);
+  }
+  .card.in .screen::after{
+    animation:sweep 1.1s ease-out .15s 1;
+  }
+  @keyframes sweep{
+    to{ transform:translateX(120%); }
+  }
+
+  .card .cap{
+    margin-top:16px;
+    font-size:13.5px;
+    line-height:1.5;
+    color:var(--ink-muted);
+    text-align:center;
+  }
+  .card .cap b{
+    color:var(--ink);
+    font-weight:600;
+  }
+
+  /* ---------- FINALE ---------- */
+  .finale{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    padding:60px 24px 140px;
+  }
+  .finale-glow{
+    position:relative;
+    display:flex;
+    justify-content:center;
+  }
+  .finale-glow::before{
+    content:"";
+    position:absolute;
+    width:320px; height:320px;
+    left:50%; top:50%;
+    transform:translate(-50%,-50%);
+    background:radial-gradient(circle, rgba(67,233,123,.45) 0%, rgba(67,233,123,0) 70%);
+    filter:blur(6px);
+    animation:pulse-glow 2.6s ease-in-out infinite;
+    z-index:0;
+  }
+  @keyframes pulse-glow{
+    0%,100%{ opacity:.6; transform:translate(-50%,-50%) scale(1); }
+    50%{ opacity:1; transform:translate(-50%,-50%) scale(1.12); }
+  }
+  .finale .phone{
+    position:relative;
+    z-index:1;
+    width:250px;
+    opacity:0;
+    transform:translateY(30px) scale(.95);
+    transition:opacity .8s cubic-bezier(.2,.7,.3,1), transform .8s cubic-bezier(.2,.7,.3,1);
+    box-shadow:
+      0 40px 90px -20px rgba(0,0,0,.7),
+      0 0 0 1px var(--green);
+  }
+  .finale .phone.in{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+
+  .confetti{
+    position:absolute;
+    top:-10px;
+    width:8px;height:14px;
+    border-radius:2px;
+    opacity:0;
+  }
+  .finale-glow.burst .confetti{
+    animation:fall 1.8s ease-in forwards;
+  }
+  @keyframes fall{
+    0%{ opacity:1; transform:translateY(0) rotate(0deg); }
+    100%{ opacity:0; transform:translateY(340px) rotate(340deg); }
+  }
+
+  .finale h3{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(24px,3.4vw,32px);
+    margin:36px 0 10px;
+  }
+  .finale p{
+    max-width:420px;
+    color:var(--ink-muted);
+    font-size:15.5px;
+    line-height:1.6;
+    margin:0;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    padding:32px 24px 48px;
+    text-align:center;
+    color:var(--ink-muted);
+    font-size:13px;
+    border-top:1px solid rgba(255,255,255,.06);
+  }
+  footer .logo-row{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+    margin-bottom:10px;
+    font-family:var(--font-display);
+    font-weight:700;
+    color:var(--ink);
+  }
+  footer .logo-row svg{width:18px;height:18px;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001s !important; animation-iteration-count:1 !important; transition-duration:.001s !important;}
+  }
+
+  @media (max-width:600px){
+    .tray{padding:36px 18px 48px; gap:18px;}
+    .card{width:172px;}
+    .hero{padding:100px 20px 60px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- reusable puzzle piece svg (as inline defs referenced via use) -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="piece-shape" viewBox="0 0 100 100">
+      <path d="M30 5 H55 C55 15 65 15 65 5 H90 V30 C80 30 80 40 90 40 V65 C80 65 80 75 90 75 V95 H65 C65 85 55 85 55 95 H30 V75 C40 75 40 65 30 65 H10 V40 C20 40 20 30 10 30 H30 Z"></path>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="piece p1"><img class="tint-red" src="images/piece-icon.png" alt=""></div>
+  <div class="piece p2"><img class="tint-blue" src="images/piece-icon.png" alt=""></div>
+  <div class="piece p3"><img class="tint-yellow" src="images/piece-icon.png" alt=""></div>
+  <div class="piece p4"><img class="tint-green" src="images/piece-icon.png" alt=""></div>
+  <div class="piece p5"><img class="tint-purple" src="images/piece-icon.png" alt=""></div>
+  <div class="piece p6"><img class="tint-red" src="images/piece-icon.png" alt=""></div>
+
+  <div class="eyebrow-logo">
+    <div class="screen">
+        <img src="images/appicon.png" alt="appicon">
+    </div>
+    <div class="screen">
+        <img src="images/tiletangle.png" alt="appicon" style="height:130px">
+    </div>
+
+  </div>
+
+  <h1 class="title">Every picture<br>starts&nbsp;scrambled.</h1>
+  <p class="tagline">A slow-paced photo-tile puzzler: shuffle a postcard scene, drag the pieces home, and watch a place you'd want to visit come back together.</p>
+
+  <div class="phone">
+    <div class="screen"><img src="images/01-intro.jpeg" alt="Tile Tangle title screen, Level 20"></div>
+  </div>
+
+  <div class="scroll-hint"><span>scroll to see it in play</span><span class="arrow"></span></div>
+</section>
+
+<!-- ============ GALLERY ============ -->
+<section>
+  <div class="wrap gallery-intro">
+    <h2>Endless scenes, one tray of tiles</h2>
+    <p>Discover new beautiful and peaceful photos as you go — cobblestone villages, flower-draped coastlines, shineful flowers, colorful fishes, a duck pond in spring — each one scrambled into pieces and waiting to be put back together.</p>
+  <div class="wrap gallery-intro">
+    <h2>About this game</h2>
+    <p>In this beautifully crafted game, your goal is so simple: 
+click on each block piece adjuect to empty block to move it step by step in order toward its right location and watch the scene come to life. Enjoy each level at your own pace. Whether you’re solving a water sea view, a colorful garden, or a dreamy landscape, every puzzle is a little moment of calm. Ready for the chanellenge.</p>
+  </div></div>
+
+  <div class="tray" id="tray">
+
+    <div class="card in">
+    <div class="phone"><div class="screen"><img src="images/02-shell-cove.jpeg" alt="Shell-covered cove puzzle, level 24"></div></div>
+      <p class="cap"><b>Unwind</b> — one calming scene at a time</p>
+    </div>
+
+    <div class="card in">
+    <div class="phone"><div class="screen"><img src="images/03-blue-stairs.jpeg" alt="Shell-covered cove puzzle, level 24"></div></div>
+      <p class="cap"><b>Escape</b> — into a postcard worth chasing</p>
+    </div>
+
+    <div class="card in">
+        <div class="phone"><div class="screen"><img src="images/04-riviera-house-a.jpeg" alt="Shell-covered cove puzzle, level 24"></div></div>
+      <p class="cap"><b>Relax</b> — and watch the picture come together</p>
+    </div>
+
+    <div class="card in">
+        <div class="phone"><div class="screen"><img src="images/05-riviera-house-b.jpeg" alt="Shell-covered cove puzzle, level 24"></div></div>
+      <p class="cap"><b>Discover</b> — a new favorite view every round</p>
+    </div>
+
+    <div class="card in">
+        <div class="phone"><div class="screen"><img src="images/06-riviera-house-c.jpeg" alt="Shell-covered cove puzzle, level 24"></div></div>
+      <p class="cap"><b>Slow down</b> — there's no clock worth racing</p>
+    </div>
+
+    <div class="card in">
+        <div class="phone"><div class="screen"><img src="images/07-canal-village.jpeg" alt="Shell-covered cove puzzle, level 24"></div></div>
+      <p class="cap"><b>Get lost</b> — in colors made for daydreaming</p>
+    </div>
+
+    <div class="card in">
+        <div class="phone"><div class="screen"><img src="images/08-pink-cliffs.jpeg" alt="Shell-covered cove puzzle, level 24"></div></div>
+      <p class="cap"><b>Unplug</b> — and let the puzzle do the rest</p>
+    </div>
+
+    <div class="card in">
+        <div class="phone"><div class="screen"><img src="images/09-willow-pond-a.jpeg" alt="Shell-covered cove puzzle, level 24"></div></div>
+      <p class="cap"><b>Rediscover</b> — the joy of a perfect fit</p>
+    </div>
+
+    <div class="card">
+        <div class="phone"><div class="screen"><img src="images/10-willow-pond-b.jpeg" alt="Shell-covered cove puzzle, level 24"></div></div>
+      <p class="cap"><b>Stay a while</b> — the best views are worth it</p>
+    </div>
+
+    <div class="card">
+        <div class="phone"><div class="screen"><img src="images/11-vineyard.jpeg" alt="level 24"></div></div>
+      <p class="cap"><b>Piece by piece</b> — turn chaos into calm</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ FINALE ============ -->
+<section class="finale" id="finale">
+  <div class="finale-glow burst" id="finaleGlow">
+    <div class="phone in" id="winPhone">
+      <div class="screen"><img src="images/12-win.jpeg" alt="Tile Tangle win screen, score 4415, level 19"></div>
+    </div>
+  <div class="confetti" style="left: 77.6902%; background: rgb(255, 90, 110); animation-delay: 0.352474s;"></div><div class="confetti" style="left: 66.9182%; background: rgb(76, 141, 255); animation-delay: 0.322466s;"></div><div class="confetti" style="left: 86.7294%; background: rgb(255, 201, 60); animation-delay: 0.265904s;"></div><div class="confetti" style="left: 78.2289%; background: rgb(67, 233, 123); animation-delay: 0.00212059s;"></div><div class="confetti" style="left: 39.163%; background: rgb(255, 90, 110); animation-delay: 0.270314s;"></div><div class="confetti" style="left: 48.8724%; background: rgb(76, 141, 255); animation-delay: 0.313134s;"></div><div class="confetti" style="left: 24.2172%; background: rgb(255, 201, 60); animation-delay: 0.317502s;"></div><div class="confetti" style="left: 27.984%; background: rgb(67, 233, 123); animation-delay: 0.301691s;"></div><div class="confetti" style="left: 17.2946%; background: rgb(255, 90, 110); animation-delay: 0.328931s;"></div><div class="confetti" style="left: 29.7857%; background: rgb(76, 141, 255); animation-delay: 0.0465847s;"></div><div class="confetti" style="left: 64.3855%; background: rgb(255, 201, 60); animation-delay: 0.0917573s;"></div><div class="confetti" style="left: 25.0617%; background: rgb(67, 233, 123); animation-delay: 0.309518s;"></div><div class="confetti" style="left: 33.8533%; background: rgb(255, 90, 110); animation-delay: 0.219189s;"></div><div class="confetti" style="left: 61.9853%; background: rgb(76, 141, 255); animation-delay: 0.23779s;"></div><div class="confetti" style="left: 15.6601%; background: rgb(255, 201, 60); animation-delay: 0.38576s;"></div><div class="confetti" style="left: 48.0137%; background: rgb(67, 233, 123); animation-delay: 0.357016s;"></div><div class="confetti" style="left: 20.0784%; background: rgb(255, 90, 110); animation-delay: 0.318725s;"></div><div class="confetti" style="left: 32.9792%; background: rgb(76, 141, 255); animation-delay: 0.287542s;"></div><div class="confetti" style="left: 16.3784%; background: rgb(255, 201, 60); animation-delay: 0.307294s;"></div><div class="confetti" style="left: 37.6436%; background: rgb(67, 233, 123); animation-delay: 0.0355763s;"></div><div class="confetti" style="left: 65.9943%; background: rgb(255, 90, 110); animation-delay: 0.14807s;"></div><div class="confetti" style="left: 25.4151%; background: rgb(76, 141, 255); animation-delay: 0.0546632s;"></div><div class="confetti" style="left: 71.1604%; background: rgb(255, 201, 60); animation-delay: 0.142823s;"></div><div class="confetti" style="left: 66.8542%; background: rgb(67, 233, 123); animation-delay: 0.155909s;"></div></div>
+  <h3>Amaaazing. You did it.</h3>
+  <p>Every solve unlocks another view — with new scenes always waiting, there's no real finish line.</p>
+</section>
+
+<footer>
+  <div class="logo-row">
+    <div class="screen">
+        <img src="images/appicon.png" alt="appicon.png" style="height:40px">
+    </div>
+  <div class="screen">
+        <img src="images/tiletangle.png" alt="appicon" style="height:40px">
+    </div></div>
+  Interface showcase — every screen above is straight from the app.
+</footer>
+
+<script>
+  // reveal cards in the tray as they scroll into view
+  const cards = document.querySelectorAll('.card');
+  const cardObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting){
+        e.target.classList.add('in');
+        cardObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.35 });
+  cards.forEach(c => cardObserver.observe(c));
+
+  // finale: reveal phone + one confetti burst
+  const winPhone = document.getElementById('winPhone');
+  const glow = document.getElementById('finaleGlow');
+  const colors = ['#FF5A6E','#4C8DFF','#FFC93C','#43E97B'];
+
+  function burstConfetti(){
+    for (let i = 0; i < 24; i++){
+      const bit = document.createElement('div');
+      bit.className = 'confetti';
+      bit.style.left = (10 + Math.random()*80) + '%';
+      bit.style.background = colors[i % colors.length];
+      bit.style.animationDelay = (Math.random()*0.4) + 's';
+      glow.appendChild(bit);
+    }
+    glow.classList.add('burst');
+  }
+
+  const finaleObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting){
+        winPhone.classList.add('in');
+        burstConfetti();
+        finaleObserver.disconnect();
+      }
+    });
+  }, { threshold: 0.5 });
+  finaleObserver.observe(winPhone);
+</script>
+
+
+
+</body></html>
